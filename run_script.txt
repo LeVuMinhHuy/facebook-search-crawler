@@ -1,0 +1,5 @@
+sudo docker run -ti --rm --name nordvpn --cap-add=NET_ADMIN --device /dev/net/tun -p 8050:8050 -e NETWORK=192.168.1.0/24 -e USER=robert.hill1996@gmail.com -e PASS=Mach1n3h3ad -e RANDOM_TOP="20" -e RECREATE_VPN_CRON="0 12 * * *" -e COUNTRY=Vietnam -e CATEGORY='Standard VPN Servers' -e PROTOCOL=openvpn_udp -d azinchen/nordvpn
+
+
+sudo docker run -ti --name splash --restart=always --net=container:nordvpn -d scrapinghub/splash --max-timeout 3600
+

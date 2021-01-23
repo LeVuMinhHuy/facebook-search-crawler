@@ -1,0 +1,4 @@
+Scrapy==2.4.1
+itemadapter==0.2.0
+scrapy_splash==0.7.2
+lxml==4.6.2
