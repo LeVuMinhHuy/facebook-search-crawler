@@ -138,15 +138,15 @@ SPLASH_COOKIES_DEBUG = True
 #     }
 # ]
 
-SCROLLS = 5
+SCROLLS = 2
 GROUPS = [
     "https://m.facebook.com/groups/241769123373305"
 ]
 
 PAGES = [
     "https://www.facebook.com/KTXDHQGConfessions",
-    "https://www.facebook.com/HCMUTcfs",
-    "https://www.facebook.com/neuconfessions",
-    "https://www.facebook.com/Ftu2Confessions"
+    #"https://www.facebook.com/HCMUTcfs",
+    #"https://www.facebook.com/neuconfessions",
+    #"https://www.facebook.com/Ftu2Confessions"
 ]
 FACEBOOK_LINK = "https://m.facebook.com/"

@@ -70,94 +70,9 @@ class FacebookSpider(scrapy.Spider):
 
     """
 
-    # Convert datetime get from facebook html to timestamp
-
-    def _convert_to_timestamp(self, the_input):
-
-        ts = -1
-
-        for each in  ["Hôm qua"]:
-            if each in the_input:
-                today = datetime.now()
-
-                the_time = the_input.split(" ")[-1].split(":")
-
-                d = datetime(year=today.year, month=today.month, day=today.day, hour=int(the_time[0]), minute=int(the_time[1])) - timedelta(days=1)
-
-                ts = int(time.mktime(d.utctimetuple()))
-
-                return ts
-        
-        for each in  ["tháng"]:
-            if each in the_input:
-                if "," in the_input:
-
-                    the_time = the_input.split(" ")
-
-                    the_hrs_mins = the_time[-1].split(":")
-
-                    d = datetime(year=int(the_time[3]), month=int(the_time[2].replace(",","")), day=int(the_time[0]), hour=int(the_hrs_mins[0]), minute=int(the_hrs_mins[1]))
-
-                    ts = int(time.mktime(d.utctimetuple()))
-
-                    return ts
-
-                else:
-
-                    today = datetime.now()
-
-                    the_time = the_input.split(" ")
-
-                    the_hrs_mins = the_time[-1].split(":")
-
-                    d = datetime(year=today.year, month=int(the_time[2].replace(",","")), day=int(the_time[0]), hour=int(the_hrs_mins[0]), minute=int(the_hrs_mins[1]))
-
-                    ts = int(time.mktime(d.utctimetuple()))
-
-                    return ts
-        
-        for each in  ["giờ"]:
-            if each in the_input:
-
-                today = datetime.now()
-
-                the_time = the_input.split(" ")
-
-                d = datetime(year=today.year, month=today.month, day=today.day, hour=today.hour, minute=today.minute, second=today.second) - timedelta(hours=int(the_time[0]))
-
-                ts = int(time.mktime(d.utctimetuple()))
-
-                return ts
-        
-        for each in  ["phút"]:
-            if each in the_input:
-
-                today = datetime.now()
-
-                the_time = the_input.split(" ")
-
-                d = datetime(year=today.year, month=today.month, day=today.day, hour=today.hour, minute=today.minute, second=today.second) - timedelta(minutes=int(the_time[0]))
-
-                ts = int(time.mktime(d.utctimetuple()))
-
-                return ts
-        
-        for each in  ["giây"]:
-            if each in the_input:
-
-                today = datetime.now()
-
-                the_time = the_input.split(" ")
-
-                d = datetime(year=today.year, month=today.month, day=today.day, hour=today.hour, minute=today.minute, second=today.second) - timedelta(seconds=int(the_time[0]))
-
-                ts = int(time.mktime(d.utctimetuple()))
-        
-                return ts
-
-    
-
     def start_requests(self):
+
+        # Get Facebook Account from settings.py
 
         with open('./cookies/cookie_test.json', 'r') as jsonfile:
             cookies = json.load(jsonfile)
@@ -219,10 +134,10 @@ class FacebookSpider(scrapy.Spider):
 
             if link == "#":
                 break
+            
+            if "permalink" not in str(link):
+                link = "https://facebook.com" + link.split("&refid")[0]
 
-            times = link_xpath.xpath("./a//text()").get()
-
-            times = self._convert_to_timestamp(times)
 
             link = link.split("/?")[0]
 
@@ -231,7 +146,6 @@ class FacebookSpider(scrapy.Spider):
             result = {
                 "post": post,
                 "link": link.replace("m.",""),
-                "timestamp": times
             }
 
             output_links.append(result)
@@ -239,4 +153,4 @@ class FacebookSpider(scrapy.Spider):
         # Dump posts list with their additional information such as timestamp to groups json filles (named with group ID) for the third spider to access and get
 
         with open("./groups/json/group_posts_" + str(response.meta["group"]) + '.json', 'w+') as jsonfile:
-            json.dump(output_links, jsonfile, ensure_ascii=False)
+            json.dump(output_links, jsonfile, ensure_ascii=False, indent = 4)

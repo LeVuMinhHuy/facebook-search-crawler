@@ -39,20 +39,25 @@ for url in groups:
 
             htmls = lxml.html.fromstring(str(htmls))
 
-            post_message = htmls.xpath("//div[@class='ecm0bbzt hv4rvrfc ihqw7lf3 dati1w0a']//text()")
-            if(post_message == []):
-                post_message = htmls.xpath("//div[@class='ecm0bbzt hv4rvrfc e5nlhep0 dati1w0a']//text()")
+            post_message = htmls.xpath("//div[@class='kr9hpln1']")
 
-            post["post_message"] = post_message
-            post["post_comment"] = []
+            if post_message == []:
+
+                post_message = htmls.xpath("//div[@class='kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x c1et5uql ii04i59q']//text()")
+
+                post["post_message"] = post_message
+
+            else:
+
+                post["post_message"] = post_message[0].xpath(".//text()")
 
             comments = htmls.xpath("//div[@class='cwj9ozl2 tvmbv18p']/ul/li")
 
-            user_id_list = {}
+            post["post_comments"] = []
 
             for comment in comments:
 
-                post["post_comment"].append(comment.xpath(".//div[@class='l9j0dhe7 ecm0bbzt rz4wbd8a qt6c0cv9 dati1w0a j83agx80 btwxx1t3 lzcic4wl']//div[@class='ecm0bbzt e5nlhep0 a8c37x1j']//text()"))
+                post["post_comments"].append(comment.xpath(".//div[@class='l9j0dhe7 ecm0bbzt rz4wbd8a qt6c0cv9 dati1w0a j83agx80 btwxx1t3 lzcic4wl']//div[@class='ecm0bbzt e5nlhep0 a8c37x1j']//text()"))  
 
                 replies = comment.xpath(".//div[@class='kvgmc6g5 jb3vyjys rz4wbd8a qt6c0cv9 d0szoon8']")
 
@@ -61,14 +66,11 @@ for url in groups:
 
                     if len(reps) > 0:
                         for rep in reps:
-                            
-                            each_rep = {}
+                            post["post_comments"].append(rep.xpath(".//div[@class='ecm0bbzt e5nlhep0 a8c37x1j']//text()"))
 
-                            post["post_comment"].append(each_rep.xpath(".//div[@class='ecm0bbzt e5nlhep0 a8c37x1j']//text()"))
-
-
+                        
 
             with open( "./posts/json/group/post_" + post["post"] + '.json', 'w+') as jsonfile:
-                json.dump(post, jsonfile, ensure_ascii=False)
+                json.dump(post, jsonfile, ensure_ascii=False, indent = 4)
         
         # break

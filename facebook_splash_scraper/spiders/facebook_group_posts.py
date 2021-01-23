@@ -104,6 +104,8 @@ class FacebookSpider(scrapy.Spider):
 
     def start_requests(self):
 
+        # Get Facebook Account from settings.py
+
         with open('./cookies/cookie_test.json', 'r') as jsonfile:
             cookies = json.load(jsonfile)
 
@@ -141,7 +143,7 @@ class FacebookSpider(scrapy.Spider):
                             "args": {
                                 "lua_source": self.script_links,
                                 "cookies": cookies,
-                                "timeout": 3600
+                                "timeout": 1500
                             }
                         },
                         "post": post["post"]
@@ -156,3 +158,4 @@ class FacebookSpider(scrapy.Spider):
 
         with open( "./posts/html/post_html_" + response.meta["post"] + '.html', 'w+') as out:
             out.write(response.text)
+
